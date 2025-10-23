@@ -173,18 +173,21 @@
         class="flex justify-around border-b border-gray-200 bg-gray-100 sticky top-0 z-10"
       >
         <button
+          type="button"
           class="tab-button flex-1 py-3 px-2 text-center text-gray-500 text-base font-medium active"
           data-tab-target="day1"
         >
           1일차 (금) 🌙
         </button>
         <button
+          type="button"
           class="tab-button flex-1 py-3 px-2 text-center text-gray-500 text-base font-medium"
           data-tab-target="day2"
         >
           2일차 (토) ☀️
         </button>
         <button
+          type="button"
           class="tab-button flex-1 py-3 px-2 text-center text-gray-500 text-base font-medium"
           data-tab-target="day3"
         >
@@ -449,24 +452,34 @@
 
         // 탭 기능 JavaScript
         const tabButtons = document.querySelectorAll(".tab-button");
-        const tabContents = document.querySelectorAll(".tab-content"); // <-- 이 줄을 다시 추가했습니다.
+        const tabContents = document.querySelectorAll(".tab-content");
 
         tabButtons.forEach((button) => {
           button.addEventListener("click", () => {
             const targetId = button.getAttribute("data-tab-target");
 
-            // 모든 탭 버튼 비활성화
-            tabButtons.forEach((btn) => btn.classList.remove("active"));
+            // 모든 탭 버튼 비활성화 (aria-selected 초기화 포함)
+            tabButtons.forEach((btn) => {
+              btn.classList.remove("active");
+              btn.setAttribute("aria-selected", "false");
+            });
+
             // 클릭한 탭 버튼 활성화
             button.classList.add("active");
+            button.setAttribute("aria-selected", "true");
 
             // 모든 탭 콘텐츠 숨기기
             tabContents.forEach((content) => {
               content.classList.add("hidden");
             });
 
-            // 타겟 탭 콘텐츠 보여주기
-            document.getElementById(targetId).classList.remove("hidden");
+            // 타겟 탭 콘텐츠 보여주기 (요소 존재 여부 확인)
+            const targetEl = document.getElementById(targetId);
+            if (targetEl) {
+              targetEl.classList.remove("hidden");
+            } else {
+              console.warn("탭 대상 요소가 존재하지 않습니다:", targetId);
+            }
           });
         });
       }); // <-- 이 닫는 괄호를 추가했습니다.
